@@ -1,6 +1,6 @@
 # FLORIDyn
 
-In this work the FLORIDyn model has been impemented. The model allows to dynamically simulate FLORIS wakes under heterogeneous conditions. Such conditions are changing wind speeds, directions and ambient turbulence intensity over time and space. The model also includes wake interaction effects and an added turbulence model. The code includes various layouts and conditions as well as guiding comments to create custom simulation cases.
+In this work the FLORIDyn model has been implemented. The model allows to dynamically simulate FLORIS wakes under heterogeneous conditions. Such conditions are changing wind speeds, directions and ambient turbulence intensity over time and space. The model also includes wake interaction effects and an added turbulence model. The code includes various layouts and conditions as well as guiding comments to create custom simulation cases.
 The high-fidelity simulation SOWFA was used to validate the code. In the current version it is possible to compare generated power outputs, to copy yaw behaviour of the SOWFA simulation and to copy control behaviour (greedy control or based on the tip-speed-ratio and the blade-pitch-angle). Relevant instructions are given in the code.
 
 ## How to get started
@@ -31,8 +31,8 @@ GB of 2667 MHz DDR4 RAM. (No use of Matlab toolboxes)
 
 
 ## Goals for the future
-The goal is to intigrate the developed model into an Ensemble Kalman Filter design and couple it with SOWFA. This should deliver a robust state estimation and will allow a Model Predictive Design approach, which will be the next goal.
-It is also the goal to implement the model in Julia for performance reeasons and to become independent from the Matlab platform. This will likely be published as a new branch.
+The goal is to integrate the developed model into an Ensemble Kalman Filter design and couple it with SOWFA. This should deliver a robust state estimation and will allow a Model Predictive Design approach, which will be the next goal.
+It is also the goal to implement the model in Julia for performance reasons and to become independent from the Matlab platform. This will likely be published as a new branch.
 
 ## Sources
 [1] Bastankhah, Majid, and Fernando Porté-Agel. “Experimental and Theoretical Study of Wind Turbine Wakes in Yawed Conditions.” Journal of Fluid Mechanics 806 (November 10, 2016): 506–41. https://doi.org/10.1017/jfm.2016.595.
@@ -45,7 +45,7 @@ It is also the goal to implement the model in Julia for performance reeasons and
 
 ## Context and contact
 This implementation was part of the master thesis of Marcus Becker, TU Darmstadt & TU Delft, Dez.2020
-The thesis is avaiable upon request. The findings of this work will be pubished in the near future.
+The thesis is available upon request. The findings of this work will be published in the near future.
 
 Contact:
 Marcus Becker, marcus.becker@tudelft.nl
