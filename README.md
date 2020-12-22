@@ -1,7 +1,6 @@
 # FLORIDyn
 
-In this work the FLORIDyn model has been impemented. The model allows to dynamically simulate FLORIS wakes 
-It is built to run under heterogeneous conditions (changing wind speed, direction, ambient turbulence intensity over time and space) and includes wake interaction effects and an added turbulence model. The code includes various layouts and conditions as well as guiding comments to create custom simulation cases.
+In this work the FLORIDyn model has been impemented. The model allows to dynamically simulate FLORIS wakes under heterogeneous conditions. Such conditions are changing wind speeds, directions and ambient turbulence intensity over time and space. The model also includes wake interaction effects and an added turbulence model. The code includes various layouts and conditions as well as guiding comments to create custom simulation cases.
 The high-fidelity simulation SOWFA was used to validate the code. In the current version it is possible to compare generated power outputs, to copy yaw behaviour of the SOWFA simulation and to copy control behaviour (greedy control or based on the tip-speed-ratio and the blade-pitch-angle). Relevant instructions are given in the code.
 
 ## How to get started
