@@ -11,6 +11,24 @@ The script main.m contains a framework to run a FLORIDyn - standalone simulation
 The underlying FLORIS model is based on the gaussian wake model by Bastankhah and Porte-Agel [1], the dynamic transformation is inspired by the FLORIDyn model by Gebraad and Wingerden [2]. Concepts to include heterogeneous conditions for the FLORIS model have been inspired by Farrell et al. [3].
 
 ## Pictures and animations
+Selection of visualizations, more can be found in the folder "Pictures".
+
+### Nine turbine case with 60 degree wind direction change
+In this case only Observation Points a bit above and below hub height were plotted to visualize the wind speed at hub height.
+![NineTurbineCase](https://github.com/MarcusBecker-GitHub/FLORIDyn_Matlab/blob/main/Pictures/Animations/9T.gif)
+
+### Three turbine case flow field
+Flow field at hub height merged as one surface.
+![3TFlowField](https://github.com/MarcusBecker-GitHub/FLORIDyn_Matlab/blob/main/Pictures/FlowField/ThreeT_00_FlowField_horizontal_newI.png)
+
+### Three turbine case generated power
+Generated power of the FLORIDyn simulation next to the (turbulent) SOWFA simulation. Greedy control and no yaw angle.
+![3TGeneratedPower](https://github.com/MarcusBecker-GitHub/FLORIDyn_Matlab/blob/main/Pictures/GeneratedPower/3T_00_greedy.png)
+
+### Computational Performance
+Seconds per time step, dependent on the number of Observation Points and turbines on a log scale. Numbers were measured in Matlab 2020a, a 2.3 GHz 8-Core Intel i9 CPU, 32
+GB of 2667 MHz DDR4 RAM. (No use of Matlab toolboxes)
+![CompPerformance](https://github.com/MarcusBecker-GitHub/FLORIDyn_Matlab/blob/main/Pictures/Performance/Performance_NumOPPerTurbine_log.png)
 
 
 ## Goals for the future
