@@ -4,7 +4,7 @@ In this work the FLORIDyn model has been implemented. The model allows to dynami
 The high-fidelity simulation SOWFA was used to validate the code. In the current version it is possible to compare generated power outputs, to copy yaw behaviour of the SOWFA simulation and to copy control behaviour (greedy control or based on the tip-speed-ratio and the blade-pitch-angle). Relevant instructions are given in the code.
 
 ## How to get started
-The script main.m contains a framework to run a FLORIDyn - standalone simulation. It prepares the necessary variables and settings and calls the function FLORIDyn.m .
+The script main.m contains a framework to run a FLORIDyn - standalone simulation. It prepares the necessary variables and settings and calls the function FLORIDyn.m . If you have SOWFA data avaiable or want to run a simulation based on SOWFA data in this repository, use mainSOWFA.m . The script mentions the necessary files and includes the generated power in SOWFA in the power plot. Currently the FLORIDyn simulation is coupled very lightly with SOWFA, more is planned for the future.
 
 ## Scientific basis
 The underlying FLORIS model is based on the gaussian wake model by Bastankhah and Porte-Agel [1], the dynamic transformation is inspired by the FLORIDyn model by Gebraad and Wingerden [2]. Concepts to include heterogeneous conditions for the FLORIS model have been inspired by Farrell et al. [3].
