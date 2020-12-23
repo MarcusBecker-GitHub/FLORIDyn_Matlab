@@ -1,4 +1,5 @@
 %======= Main script to initialize and start a FLORIDyn simulation =======%
+% ------------------------ SOWFA data required! ------------------------- %
 % This script may serve as an example on how to prepare and start a       %
 % FLORIdyn simulation. This script contains a brief explanation of the    %
 % settings. More information about the variables and settings is given in %
@@ -13,7 +14,6 @@ main_addPaths;
 
 %% Set controller type
 % Setting for the contoller
-% ========= ! If you intend to use SOWFA data, use mainSOWFA.m ! ======== %
 % Control.Type:
 %   'SOWFA_greedy_yaw'  -> Uses SOWFA yaw angles and a greedy controller
 %                           for C_T and C_P based on lookup tables and the 
@@ -27,8 +27,30 @@ main_addPaths;
 %   Set to true if you are starting a new simulation, if you are copying
 %   the states from a previous simulation, set to false.
 
-Control.Type = 'FLORIDyn_greedy';
+Control.Type = 'SOWFA_greedy_yaw';
 Control.init = true;
+
+%% Set path to SOWFA files
+% To run this, modify the SOWFA output files to have the ending .csv they
+% are expected to be avaiable under i.e. [file2val 'generatorPower.csv']
+%
+% Two control options are implemented:
+%   1) Run greedy control
+%       Needed files:
+%       'nacelleYaw.csv'
+%   2) Calculate Ct and Cp based on blade pitch and tip speed ratio
+%       Needed files:
+%       'nacelleYaw.csv','generatorPower.csv',
+%       'bladePitch.csv','rotorSpeedFiltered.csv'
+%       ATTENTION!
+%       The SOWFA file 'bladePitch.csv' has to be modified to say
+%           0     instead of     3{0}
+%       Search & delete all "3{" and "}"
+%
+% Needed for plotting:
+%   'generatorPower.csv'
+file2val = '/ValidationData/csv/2T_00_torque_';
+loadSOWFAData;
 
 %% Load Layout
 %   Load the turbine configuration (position, diameter, hub height,...) the
@@ -107,7 +129,7 @@ Vis.Console     = true;
     FLORIDyn(T,OP,U,I,UF,Sim,fieldLims,Pow,VCpCt,chain,Vis,Control);
 
 %% ===================================================================== %%
-% = Reviewed: 2020.12.22 (yyyy.mm.dd)                                   = %
+% = Reviewed: 2020.12.23 (yyyy.mm.dd)                                   = %
 % === Author: Marcus Becker                                             = %
 % == Contact: marcus.becker@tudelft.nl                                  = %
 % ======================================================================= %
