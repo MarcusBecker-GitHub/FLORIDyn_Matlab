@@ -85,7 +85,7 @@ Control.init = true;
 %                 (very lightweight, does not require online to be true)
 Vis.online      = false;
 Vis.Snapshots   = false;
-Vis.FlowField   = true;
+Vis.FlowField   = false;
 Vis.PowerOutput = true;
 Vis.Console     = true;
 
@@ -135,7 +135,7 @@ if Vis.PowerOutput
     f.PaperPositionMode   = 'auto';
 end
 %% ===================================================================== %%
-% = Reviewed: 2020.12.23 (yyyy.mm.dd)                                   = %
+% = Reviewed: 2020.12.22 (yyyy.mm.dd)                                   = %
 % === Author: Marcus Becker                                             = %
 % == Contact: marcus.becker@tudelft.nl                                  = %
 % ======================================================================= %

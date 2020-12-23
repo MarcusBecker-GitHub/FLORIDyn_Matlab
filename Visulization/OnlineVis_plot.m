@@ -10,7 +10,7 @@ n_th = 1;
 OPtmp_pos = OP_pos_old(1:n_th:end,:);
 OPtmp_u = OP.u(1:n_th:end,:);
 
-aboveGround = OPtmp_pos(:,3)>1; % Cut off bottom layer under 5m
+aboveGround = OPtmp_pos(:,3)>1; % Cut off bottom layer at/under 1m
 p = scatter3(...
     OPtmp_pos(aboveGround,1),...
     OPtmp_pos(aboveGround,2),...
@@ -37,7 +37,7 @@ zlim([-300,500]);
 
 nr = num2str(Sim.TimeSteps(k));
 nr = pad(nr,4,'left','0');
-title(['Nine turbine case, +60 deg wind change. t = ' nr  's'])
+title([num2str(length(T.D)) ' turbine case, t = ' nr  's'])
 
 %view([-i/251*80-5 20]);
 zrot = max(k/80*(-10)-5,-15) + max(k-144,0)/60*13 - max(k-204,0)/60*13;
@@ -72,32 +72,10 @@ set(f.Children, ...
     'FontSize',     10);
 %axes1.Projection = 'perspective';
 
-%% Plot the Power Output
-% subplot(2,1,2)
-% plot(Sim.TimeSteps,powerHist(1,:),'LineWidth',2);
-% hold on
-% for ii = 2:length(T.D)
-%     plot(Sim.TimeSteps,powerHist(ii,:),'LineWidth',2);
-% end
-% title('Power Output')
-% ylabel('Power output in W')
-% xlabel('Time [s]')
-% xlim([0,Sim.TimeSteps(end)])
-% ylim([0 inf])
-% grid on
-% hold off
-
-% pause(0.1)
-% if Vis.Snapshots
-%     nr = num2str(k);
-%     nr = pad(nr,4,'left','0');
-%     print(['./Snapshot/' nr], '-dpng', '-r300')
-% end
-
-
-
-% Turbine Data
-%   tl_pos      := [n x 3] vec; [x,y,z] world coord. (can be nx2)
-%   tl_D        := [n x 1] vec; Turbine diameter
-%   tl_ayaw     := [n x 2] vec; axial induction factor and yaw (world coord.)
-%   tl_U        := [n x 2] vec; Wind vector [Ux,Uy] (world coord.)
+pause(0.1)
+if Vis.Snapshots
+    % Store pictures, might require the creation of the folder "Snapshot"
+    nr = num2str(k);
+    nr = pad(nr,4,'left','0');
+    print(['./Snapshot/' nr], '-dpng', '-r300')
+end

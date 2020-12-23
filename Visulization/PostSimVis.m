@@ -1,7 +1,14 @@
 %% Post-Sim Visulization
 %   Contour Plot of the wind field
 %% Interpolate the values of the grid in the wakes
-u_grid_z = NaN(size(u_grid_x(:)));
+try
+    u_grid_z = NaN(size(u_grid_x(:)));
+catch
+    % Intialize needed variables
+    OnlineVis_Start;
+    u_grid_z = NaN(size(u_grid_x(:)));
+    OP_pos_old = OP.pos;
+end
 narc_height = true(size(OP.t_id));
 
 if size(OP_pos_old,2)==3
@@ -20,12 +27,6 @@ for wakes = 1:length(T.D)
     u_grid_z_tmp = F(u_grid_x(:),u_grid_y(:));
     
     u_grid_z = min([u_grid_z, u_grid_z_tmp],[],2);
-%     % Find grid values which are nan and are not nan in the interpolated
-%     % data
-%     writeGridZ = and(~isnan(u_grid_z_tmp),isnan(u_grid_z));
-%     
-%     % Fill these entries with the aquired data
-%     u_grid_z(writeGridZ)=F(u_grid_x(writeGridZ),u_grid_y(writeGridZ));
 end
 
 %% Fill up the values outside of the wakes with free windspeed measurements
@@ -49,7 +50,7 @@ for i_T = 1:length(T.D)
     rot_pos = rot_pos + T.pos(i_T,1:2)';
     plot3(rot_pos(1,:),rot_pos(2,:),[20,20],'k','LineWidth',3);
 end
-title('Filled contour plot')
+title('Approximated flow field at hub height')
 axis equal
 c = colorbar;
 c.Label.String ='Wind speed [m/s]';
@@ -57,20 +58,8 @@ xlabel('West-East [m]')
 ylabel('South-North [m]')
 hold off
 
-
-%% Power Hist
-
-% figure(3)
-% plot(powerHist(1,:));
-% hold on
-% for i = 2:NumTurbines
-%     plot(powerHist(i,:));
-% end
-% title('Effective wind speed at the rotor plane')
-% ylabel('Wind speed in m/s')
-% xlabel('time step')
-% grid on
-% hold off
-%% CHANGES to Contour
-% Fill grid with turbine data one-by-one turbine -> avoid triangulation
-% effects with other turbines.
+%% ===================================================================== %%
+% = Reviewed: 2020.12.23 (yyyy.mm.dd)                                   = %
+% === Author: Marcus Becker                                             = %
+% == Contact: marcus.becker@tudelft.nl                                  = %
+% ======================================================================= %

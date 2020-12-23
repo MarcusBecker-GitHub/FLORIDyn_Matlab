@@ -50,7 +50,7 @@ Control.init = true;
 % Needed for plotting:
 %   'generatorPower.csv'
 file2val = '/ValidationData/csv/2T_00_torque_';
-loadSOWFAData;
+LoadSOWFAData;
 
 %% Load Layout
 %   Load the turbine configuration (position, diameter, hub height,...) the
@@ -105,10 +105,10 @@ loadSOWFAData;
 %   .PowerOutput: Plots the generated power at the end of the simulation
 %   .Console:     Online simulation progress with duration estimation
 %                 (very lightweight, does not require online to be true)
-Vis.online      = true;
+Vis.online      = false;
 Vis.Snapshots   = false;
-Vis.FlowField   = true;
-Vis.PowerOutput = false;
+Vis.FlowField   = false;
+Vis.PowerOutput = true;
 Vis.Console     = true;
 
 %% Create starting OPs and build opList
@@ -133,7 +133,7 @@ if Vis.PowerOutput
     % Plotting
     f = figure;
     hold on
-    
+    nT = length(T.D);
     % Get SOWFA data if avaiable
     if exist([file2val 'nacelleYaw.csv'], 'file') == 2
         powSOWFA_WPS = importGenPowerFile([file2val 'generatorPower.csv']);
@@ -167,16 +167,6 @@ if Vis.PowerOutput
     % scaling
     f.Units               = 'centimeters';
     f.Position(3)         = 16.1; % A4 line width
-    % Set font & size
-    try
-        set(f.Children, ...
-            'FontName',     'Frontpage', ...
-            'FontSize',     10);
-    catch
-        set(f.Children, ...
-            'FontName',     'Arial', ...
-            'FontSize',     10);
-    end
     set(gca,'LooseInset', max(get(gca,'TightInset'), 0.04))
     f.PaperPositionMode   = 'auto';
 end

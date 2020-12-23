@@ -84,6 +84,7 @@ function [powerHist,OP,T,chain]=FLORIDyn(T,OP,U,I,UF,Sim,fieldLims,Pow,VCpCt,cha
 %    .init      := bool;      Initialize turbine states
 %    .Type      := String;    Control strategy
 %       [If needed]
+%    .yawSOWFA  := [n x t+1]vec; [time, yaw T0, yaw T1, ...] 
 %    .cpInterp  := scattered interpolant object; C_P as function of bpa/tsr
 %    .ctInterp  := scattered interpolant object; C_T as function of bpa/tsr
 % ======================================================================= %
@@ -190,3 +191,8 @@ end
 %% Store power output together with time line
 powerHist = [Sim.TimeSteps',powerHist'];
 end
+%% ===================================================================== %%
+% = Reviewed: 2020.12.23 (yyyy.mm.dd)                                   = %
+% === Author: Marcus Becker                                             = %
+% == Contact: marcus.becker@tudelft.nl                                  = %
+% ======================================================================= %

@@ -10,7 +10,8 @@ switch Control.Type
         % Read yaw of SOWFA Sim (deg)
         for iT = 1:nT
             yaw(iT) = interp1(...
-                yawSOWFA(iT:nT:end,2),yawSOWFA(iT:nT:end,3),Sim.TimeSteps(k));
+                Control.yawSOWFA(iT:nT:end,2),...
+                Control.yawSOWFA(iT:nT:end,3),Sim.TimeSteps(k));
         end
         
         % Yaw conversion SOWFA to FLORIDyn
@@ -25,7 +26,8 @@ switch Control.Type
         % Read yaw of SOWFA Sim (deg)
         for iT = 1:nT
             yaw(iT) = interp1(...
-                yawSOWFA(iT:nT:end,2),yawSOWFA(iT:nT:end,3),Sim.TimeSteps(k));
+                Control.yawSOWFA(iT:nT:end,2),...
+                Control.yawSOWFA(iT:nT:end,3),Sim.TimeSteps(k));
         end
         
         % Yaw conversion SOWFA to FLORIDyn
@@ -99,7 +101,7 @@ T.P = 0.5*UF.airDen*(T.D/2).^2.*pi.*T.Cp.*T.u.^3.* Pow.eta.*...
 powerHist(:,k)= T.P;
 
 %% ===================================================================== %%
-% = Reviewed: 2020.11.03 (yyyy.mm.dd)                                   = %
+% = Reviewed: 2020.12.23 (yyyy.mm.dd)                                   = %
 % === Author: Marcus Becker                                             = %
-% == Contact: marcus.becker.mail@gmail.com                              = %
+% == Contact: marcus.becker@tudelft.nl                                  = %
 % ======================================================================= %

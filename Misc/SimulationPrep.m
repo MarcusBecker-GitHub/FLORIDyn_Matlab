@@ -14,9 +14,11 @@ U_abs   = U.abs(1,:);
 I_val   = I.val(1,:);
 
 % Preparing the console output
-% fprintf(' ============ FLORIDyn Progress ============ \n');
-% fprintf(['  Number of turbines  : ' num2str(length(T.D)) '\n']);
-% dispstat('','init')
+if Vis.Console
+    fprintf(' ============ FLORIDyn Progress ============ \n');
+    fprintf(['  Number of turbines  : ' num2str(length(T.D)) '\n']);
+    dispstat('','init')
+end
 
 % Preallocate the power history
 powerHist = zeros(length(T.D),Sim.NoTimeSteps);
@@ -37,7 +39,7 @@ ControllerScript;
 OP.Ct = T.Ct(OP.t_id);
 
 %% ===================================================================== %%
-% = Reviewed: 2020.09.30 (yyyy.mm.dd)                                   = %
+% = Reviewed: 2020.12.23 (yyyy.mm.dd)                                   = %
 % === Author: Marcus Becker                                             = %
-% == Contact: marcus.becker.mail@gmail.com                              = %
+% == Contact: marcus.becker@tudelft.nl                                  = %
 % ======================================================================= %
