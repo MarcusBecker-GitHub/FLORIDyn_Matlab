@@ -22,12 +22,14 @@ main_addPaths;
 %                           tip-speed-ratio (needs additional files)
 %   'FLORIDyn_greedy'   -> A greedy controller based on lookup tables and 
 %                           the wind speed (no additional files)
+%   'AxialInduction'    -> Will use a = 1/3 for all turbines and copies the
+%                           yaw angle from Control.yaw (in degree)
 % 
 % Control.init:
 %   Set to true if you are starting a new simulation, if you are copying
 %   the states from a previous simulation, set to false.
 
-Control.Type = 'FLORIDyn_greedy';
+Control.Type = 'AxialInduction';
 Control.init = true;
 
 %% Load Layout
@@ -42,10 +44,32 @@ Control.init = true;
 %       'nineDTU10MW'   -> nine turbines in a 3x3 grid, 900m dist.
 %       'threeDTU10MW'  -> three turbines in 1x3 grid, 5D distance
 %       'fourDTU10MW'   -> 2x2 grid 
+%       
+%       Farm Conners Project
+%       'FC_oneINNWIND10MW'
+%       'FC_threeINNWIND10MW'
+%       'FC_nineINNWIND10MW'
 %  
 %   Chain length & the number of chains can be set as extra vars, see 
 %   comments in the function for additional info.
-[T,fieldLims,Pow,VCpCt,chain] = loadLayout('twoDTU10MW');
+[T,fieldLims,Pow,VCpCt,chain] = loadLayout('FC_oneINNWIND10MW');
+
+%% Set the yaw angle for all turbines (Farm Connor specific)
+% Angle in degree, will be converted to rad
+Control.yaw  = T.yaw;
+switch lengt(T.D)
+    case 1
+        % 1T
+        Control.yaw(1) = 0;
+    case 3
+        % 3T
+        Control.yaw(1) = 0;         % First row
+        Control.yaw(2) = 0;         % Second row
+    case 9
+        % 9T
+        Control.yaw(1:3:end) = 0;   % First row
+        Control.yaw(2:3:end) = 0;   % Second row
+end
 
 %% Load the environment
 %   U provides info about the wind: Speed(s), direction(s), changes.
@@ -66,7 +90,7 @@ Control.init = true;
 %   Numerous settings can be set via additional arguments, see the comments
 %   for more info.
 [U, I, UF, Sim] = loadWindField('const',... 
-    'windAngle',0,...
+    'windAngle',45,...
     'SimDuration',1000,...
     'FreeSpeed',true,...
     'Interaction',true,...

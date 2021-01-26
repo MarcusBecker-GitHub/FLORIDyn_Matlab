@@ -85,7 +85,11 @@ switch Control.Type
         
         T.Ct = 4*T.axi.*(1-T.axi.*cos(yaw));
         T.Cp = 4*T.axi.*(1-T.axi).^2;
-        
+    case 'AxialInduction'
+        yaw = Control.yaw;  % Deg
+        yaw = (-yaw)/180*pi;% Deg2rad + fitting yaw to SOWFA sim
+        T.Ct = 4*T.axi.*(1-T.axi.*cos(yaw));
+        T.Cp = 4*T.axi.*(1-T.axi).^2;
 end
 
 % Set Yaw relative to the wind angle and add offset
