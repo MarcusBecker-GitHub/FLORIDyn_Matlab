@@ -159,6 +159,57 @@ switch layout
         
         % Get VCtCp
         load('./TurbineData/VCpCt_10MW_SOWFA.mat');
+    case 'FC_nineINNWIND10MW'
+        % Nine DTU 10MW turbines in a 3x3 grid for the Farm Conners
+        % project
+        T_Pos = [...
+            2143.3, 378.2   119 178.3;...     % T0
+            3025.9, 1260.8  119 178.3;...     % T1
+            3908.4, 2143.3  119 178.3;...     % T2
+            1260.8, 1260.8  119 178.3;...     % T3
+            2143.3, 2143.3  119 178.3;...     % T4
+            3025.9, 3025.9  119 178.3;...     % T5
+            278.2,  2143.3  119 178.3;...     % T6
+            1260.8, 3025.9  119 178.3;...     % T7
+            2143.3, 3908.4  119 178.3;...     % T8
+            ]; 
+        
+        fieldLims = [0 0; 5000 5000];
+        
+        Pow.eta     = 1.08;     %Def. DTU 10MW
+        Pow.p_p     = 1.50;     %Def. DTU 10MW
+        
+        % Get VCtCp
+        load('./TurbineData/VCpCt_10MW_SOWFA.mat');
+    case 'FC_threeINNWIND10MW'
+        % Three INNWIND 10MW turbines in a 1x3 grid for the Farm Conners
+        % project
+        T_Pos = [...
+            954.5,  954.5   119 178.3;...     % T0
+            1584.9, 1584.9  119 178.3;...     % T1
+            2152.3, 2278.4  119 178.3;...     % T2
+            ]; 
+        
+        fieldLims = [0 0; 5000 5000];
+        
+        Pow.eta     = 1.08;     %Def. DTU 10MW
+        Pow.p_p     = 1.50;     %Def. DTU 10MW
+        
+        % Get VCtCp
+        load('./TurbineData/VCpCt_10MW_SOWFA.mat');
+    case 'FC_oneINNWIND10MW'
+        % One INNWIND 10MW turbine for the Farm Conners project
+        T_Pos = [...
+            954.5 954.5   119 178.3...     % T0
+            ]; 
+        
+        fieldLims = [0 0; 5000 5000];
+        
+        Pow.eta     = 1.08;     %Def. DTU 10MW
+        Pow.p_p     = 1.50;     %Def. DTU 10MW
+        
+        % Get VCtCp
+        load('./TurbineData/VCpCt_10MW_SOWFA.mat');
     otherwise
         error('Unknown scenario, no simulation started');
 end
