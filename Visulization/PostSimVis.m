@@ -12,10 +12,10 @@ end
 narc_height = true(size(OP.t_id));
 
 if size(OP_pos_old,2)==3
-    narc_height = OP_pos_old(:,3)<mean(T.pos(:,3))*1.2;
-    narc_height = and(OP_pos_old(:,3)>mean(T.pos(:,3))*0.8,narc_height);
+    narc_height = OP_pos_old(:,3)<mean(T.pos(:,3))*1.3;
+    narc_height = and(OP_pos_old(:,3)>mean(T.pos(:,3))*0.7,narc_height);
 end
-
+%narc_height = true(size(OP.t_id));
 for wakes = 1:length(T.D)
     % Use wake of turbine "wakes" to triangulate
     F = scatteredInterpolant(...
@@ -54,8 +54,13 @@ title('Approximated flow field at hub height')
 axis equal
 c = colorbar;
 c.Label.String ='Wind speed [m/s]';
+if isfield(Vis,'CRange')
+    c.Limits = Vis.CRange;
+    caxis(Vis.CRange);
+end
 xlabel('West-East [m]')
 ylabel('South-North [m]')
+colormap jet
 hold off
 
 %% ===================================================================== %%
