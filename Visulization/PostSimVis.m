@@ -7,7 +7,7 @@ catch
     % Intialize needed variables
     OnlineVis_Start;
     u_grid_z = NaN(size(u_grid_x(:)));
-    OP_pos_old = OP.pos;
+    %OP_pos_old = OP.pos;
 end
 narc_height = true(size(OP.t_id));
 

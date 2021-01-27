@@ -167,7 +167,10 @@ for k = 1:Sim.NoTimeSteps
     OP.I_0 = getAmbientTurbulence(OP.pos, UF.IR, I_val, UF.Res, UF.lims);
     
     % Save old position for plotting if needed
-    if Vis.online; OP_pos_old = OP.pos;end %#ok<NASGU>
+    if or(Vis.online,and(Vis.FlowField,k == Sim.NoTimeSteps))
+        OP_pos_old = OP.pos; %#ok<NASGU>
+    end 
+    
     
     % Calculate the down and crosswind steps along with the windspeed at
     % the turbine rotor planes
@@ -179,7 +182,7 @@ for k = 1:Sim.NoTimeSteps
     %===================== ONLINE VISULIZATION ===========================%
     if Vis.online; OnlineVis_plot; end
     if and(Vis.FlowField,k == Sim.NoTimeSteps)
-        hold off
+        if Vis.online; hold off; end
         PostSimVis;
     end
     
