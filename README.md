@@ -31,6 +31,9 @@ Seconds per time step, dependent on the number of Observation Points and turbine
 GB of 2667 MHz DDR4 RAM. (No use of Matlab toolboxes)
 ![CompPerformance](https://github.com/MarcusBecker-GitHub/FLORIDyn_Matlab/blob/main/Pictures/Performance/Performance_NumOPPerTurbine_log.png)
 
+### App Screenshot
+Current version of the FLORIDyn App. It is meant to provide an easy start and idea of the simulation. The data storage option is not implemented yet. On the top right you can see the preview of the layout and the wind direction (red arrow) and the wind shear. Below you can set the simulation duration and if the flow field should be plotted. On the top left environmental variables can be changed: Wind speed, direction, the ambient turbulence intensity and the wind shear coefficient. Below you can choose from predefined turbine layout options. Pressing the RUN button will start the Simulation. If you have MATLAB open you should be able to follow the progress in the console. After the run the generated power will be displayed in the figure below the run button. The flow field will be generated in a separate figure which will also not be overwritten by following simulations.
+![FLORIDynApp](https://github.com/MarcusBecker-GitHub/FLORIDyn_Matlab/blob/main/Pictures/AppScreenshot.PNG)
 
 ## Goals for the future
 The goal is to integrate the developed model into an Ensemble Kalman Filter design and couple it with SOWFA. This should deliver a robust state estimation and will allow a Model Predictive Design approach, which will be the next goal.
