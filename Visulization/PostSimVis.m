@@ -60,11 +60,39 @@ if isfield(Vis,'CRange')
 end
 xlabel('West-East [m]')
 ylabel('South-North [m]')
-colormap jet
+
+% Choose colormap
+if isfield(Vis,'Colormap')
+    switch Vis.Colormap
+        case "jet"
+            colormap jet
+        case "viridis"
+            % blue, green, yellow colormap - often used in python and R
+            cmp = viridis(1000);
+            colormap(cmp)
+        otherwise
+            colormap(Vis.Colormap)
+    end
+end
 hold off
 
+%% Write vtk
+% In case the field should be stored, save the figure and the generate &
+% save the vtk file
+if isfield(Vis,'Store')
+    if Vis.Store
+        savefig('FlowFieldAtHH.fig')
+        t=delaunayn([u_grid_x(:),u_grid_y(:)]);
+        writeVTK('FlowFieldAtHH',t,[u_grid_x(:),u_grid_y(:)],u_grid_z(:));
+    end
+end
+
+%% Create Streamwise slice through Field
+% if isfield(Vis,'StreamSlice')
+%     
+% end
 %% ===================================================================== %%
-% = Reviewed: 2020.12.23 (yyyy.mm.dd)                                   = %
+% = Reviewed: 2021.02.24 (yyyy.mm.dd)                                   = %
 % === Author: Marcus Becker                                             = %
 % == Contact: marcus.becker@tudelft.nl                                  = %
 % ======================================================================= %

@@ -171,6 +171,11 @@ for k = 1:Sim.NoTimeSteps
         OP_pos_old = OP.pos; %#ok<NASGU>
     end 
     
+    % Enable full interaction for last plot to get true flow field for the
+    % plot
+    if and(Vis.FlowField,k == Sim.NoTimeSteps)
+        Sim.reducedInteraction = false;
+    end
     
     % Calculate the down and crosswind steps along with the windspeed at
     % the turbine rotor planes

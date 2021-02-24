@@ -119,13 +119,13 @@ if Sim.Interaction
     % Ct=4a(1-a) -> a = 0.5(1-sqrt(1-Ct)) in the area a \in [0,0.5]
     OP_a = 0.5*(1-sqrt(1-OP.Ct));
     % Calculate the foreign turbulence influence
-    obj_a = .73;    %.8
-    obj_b = .8325;  %.73
-    obj_c = .0325;  %.35
-    obj_d = -.32;   %-0.32
+    obj_a = .73;    %7.84;  %.8
+    obj_b = .8325;  %4.57;  %.73
+    obj_c = .0325;  %.43;   %.35
+    obj_d = -.32;   %-.246; %-0.32
     rel_I(f_inf) = ...
         obj_a*(OP_a(rel_I(f_inf)).^obj_b) .* ...
-        (OP.I_0(rel_I(f_inf)).^obj_c) .* ...
+        (OP.I_0(rel_I(f_inf)).^obj_c) .* ... % Shouldn't this be OP_I?
         ((OP.dw(rel_I(f_inf))./D(rel_I(f_inf))).^obj_d);
     
     rel_I(:,1) = sum(rel_I,2);

@@ -52,24 +52,24 @@ Control.init = true;
 %  
 %   Chain length & the number of chains can be set as extra vars, see 
 %   comments in the function for additional info.
-[T,fieldLims,Pow,VCpCt,chain] = loadLayout('FC_oneINNWIND10MW');
+[T,fieldLims,Pow,VCpCt,chain] = loadLayout('threeDTU10MW');
 
 %% Set the yaw angle for all turbines (Farm Connor specific)
 % Angle in degree, will be converted to rad
 Control.yaw  = T.yaw;
-switch lengt(T.D)
-    case 1
-        % 1T
-        Control.yaw(1) = 0;
-    case 3
-        % 3T
-        Control.yaw(1) = 0;         % First row
-        Control.yaw(2) = 0;         % Second row
-    case 9
-        % 9T
-        Control.yaw(1:3:end) = 0;   % First row
-        Control.yaw(2:3:end) = 0;   % Second row
-end
+% switch length(T.D)
+%     case 1
+%         % 1T
+%         Control.yaw(1) = 0;
+%     case 3
+%         % 3T
+%         Control.yaw(1) = 0;         % First row
+%         Control.yaw(2) = 0;         % Second row
+%     case 9
+%         % 9T
+%         Control.yaw(1:3:end) = 0;   % First row
+%         Control.yaw(2:3:end) = 0;   % Second row
+% end
 
 %% Load the environment
 %   U provides info about the wind: Speed(s), direction(s), changes.
