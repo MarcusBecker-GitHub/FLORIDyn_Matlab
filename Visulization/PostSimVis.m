@@ -29,6 +29,7 @@ for wakes = 1:length(T.D)
     u_grid_z = min([u_grid_z, u_grid_z_tmp],[],2);
 end
 
+clear narc_height F u_grid_z_tmp wakes
 %% Fill up the values outside of the wakes with free windspeed measurements
 nan_z = isnan(u_grid_z);
 u_grid_z_tmp2 = getWindVec3(...
@@ -88,9 +89,101 @@ if isfield(Vis,'Store')
 end
 
 %% Create Streamwise slice through Field
-% if isfield(Vis,'StreamSlice')
-%     
-% end
+
+% Test Settings
+% Vis.StreamSlice.end     = [5000,5000];
+% Vis.StreamSlice.start   = [0,0];
+% Vis.StreamSlize.Height  = 1000;
+
+if isfield(Vis,'StreamSlice')
+    % Get vector start to end, angle, resolution and start & end in slice
+    % coordinate system
+    sliceVec   = Vis.StreamSlice.end - Vis.StreamSlice.start;
+    sliceAng   = atan2(sliceVec(2),sliceVec(1));
+    sliceRes   = max(size(u_grid_x));
+    sliceStart = cos(sliceAng)*Vis.StreamSlice.start(1) +...
+        sin(sliceAng)*Vis.StreamSlice.start(2);
+    sliceEnd   = cos(sliceAng)*Vis.StreamSlice.end(1) +...
+        sin(sliceAng)*Vis.StreamSlice.end(2);
+    sliceResH  = round(sliceRes*Vis.StreamSlize.Height/abs(sliceEnd-sliceStart));
+    
+    % Create meshgrid & empty speed vector
+    [SLx,SLz] = meshgrid(linspace(sliceStart,sliceEnd,sliceRes),...
+        linspace(0,Vis.StreamSlize.Height,sliceResH));
+    SLu     = nan(size(SLx(:)));
+    
+    % Threshold copied from HH plot
+    th = 0.3*mean(T.pos(:,3));
+    
+    % Find OPs within threshold distance
+    within = and(...
+        (-sin(sliceAng)*OP_pos_old(:,1)+cos(sliceAng)*OP_pos_old(:,2)) < th,...
+        (-sin(sliceAng)*OP_pos_old(:,1)+cos(sliceAng)*OP_pos_old(:,2)) > -th);
+    within = and(within,OP_pos_old(:,3)>3);
+    for wakes = 1:length(T.D)
+        % Use wake of turbine "wakes" to triangulate
+        F = scatteredInterpolant(...
+            cos(sliceAng)*OP_pos_old(and(OP.t_id==wakes,within),1) + sin(sliceAng)*OP_pos_old(and(OP.t_id==wakes,within),2),...
+            OP_pos_old(and(OP.t_id==wakes,within),3),...
+            sqrt(sum(OP.u(and(OP.t_id==wakes,within),:).^2,2)),'nearest','none');
+        
+        % Get grid values within the wake, outside nan
+        SLu_tmp = F(SLx(:),SLz(:));
+        
+        SLu = min([SLu, SLu_tmp],[],2);
+    end
+    clear SLu_tmp
+    
+    % Fill holes
+    nan_u = isnan(SLu);
+    SLu_tmp2 = getWindVec4([...
+        cos(sliceAng)*SLx(nan_u) - sin(sliceAng)*zeros(size(SLx(nan_u))),...
+        sin(sliceAng)*SLx(nan_u) + cos(sliceAng)*zeros(size(SLx(nan_u))),...
+        SLz(nan_u)],...
+        U_abs, U_ang, UF);
+    SLu(nan_u) = sqrt(sum(SLu_tmp2.^2,2));
+    SLu = reshape(SLu,size(SLx));
+    
+    % Plot
+    figure
+    contourf(SLx,SLz,SLu,30,'LineColor','none');
+    hold on
+    title('Approximated streamwise flow field')
+    axis equal
+    c = colorbar;
+    c.Label.String ='Wind speed [m/s]';
+    if isfield(Vis,'CRange')
+        c.Limits = Vis.CRange;
+        caxis(Vis.CRange);
+    end
+    xlabel('Distance [m]')
+    ylabel('Height [m]')
+    
+    % Choose colormap
+    if isfield(Vis,'Colormap')
+        switch Vis.Colormap
+            case "jet"
+                colormap jet
+            case "viridis"
+                % blue, green, yellow colormap - often used in python and R
+                cmp = viridis(1000);
+                colormap(cmp)
+            otherwise
+                colormap(Vis.Colormap)
+        end
+    end
+    hold off
+    % vtk & fig
+    % In case the field should be stored, save the figure and the generate &
+    % save the vtk file
+    if isfield(Vis,'Store')
+        if Vis.Store
+            savefig('FlowFieldStreamwise.fig')
+            t=delaunayn([SLx(:),SLz(:)]);
+            writeVTK('FlowFieldStreamwise',t,[SLx(:),SLz(:)],SLu(:));
+        end
+    end
+end
 %% ===================================================================== %%
 % = Reviewed: 2021.02.24 (yyyy.mm.dd)                                   = %
 % === Author: Marcus Becker                                             = %
