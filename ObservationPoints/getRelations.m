@@ -41,8 +41,10 @@ function rel = getRelations(OP,T,chain,onlyRotorPlane)
 numT    = length(T.D);
 rel     = zeros(size(OP.pos,1),numT);
 if numT==1;return;end
-OPsInT  = zeros(numT,1);
+
+OPsInT      = zeros(numT,1);
 chainStarts = false(size(OP.t_id));
+
 ind = chain.List(:,1) + chain.List(:,2);
 chainStarts(ind) = true;
 %% For each Turbine, retrieve all closest neighbours from all turbines
@@ -51,8 +53,11 @@ for iT1 = 1:numT
     OPsInT(iT1) = sum(isT1);
     tD = T.D(iT1);
     for iT2 = 1:numT
+        % Skip self
         if iT2 == iT1; continue; end
-        
+        % Skip turbines further away than 15D
+        if sqrt(sum((T.pos(iT1)-T.pos(iT2)).^2))>15*T.D(iT1); continue; end
+            
         isT2 = OP.t_id == iT2;
         
         if onlyRotorPlane
