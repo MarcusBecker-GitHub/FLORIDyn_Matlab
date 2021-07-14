@@ -15,12 +15,18 @@ switch Control.Type
         end
         
         % Yaw conversion SOWFA to FLORIDyn
-        yaw = (270*ones(size(yaw))-yaw)/180*pi;
+        % deg_F = -deg_S + 270 deg
+        % yaw angle defined clockwise, but for calculations counterclockwise
+        orientation = (270*ones(size(yaw))-yaw)/180*pi;
+        windDir = atan2(T.U(:,2),T.U(:,1));
+        yaw = -windDir + orientation;
         
         % Calculate Ct and Cp based on the wind speed
         %    Ct is restricted at 1, otherwise complex numbers appear in the FLORIS
         %    equations
         T.Cp    = interp1(VCpCt(:,1),VCpCt(:,2),T.u);
+        T.axi = ones(size(T.Cp)).*1/3;
+        T.Cp = 4*T.axi.*(1-T.axi).^2;
         T.Ct    = min(interp1(VCpCt(:,1),VCpCt(:,3),T.u),0.89);
     case 'SOWFA_bpa_tsr_yaw'
         % Read yaw of SOWFA Sim (deg)
@@ -94,7 +100,7 @@ end
 
 % Set Yaw relative to the wind angle and add offset
 T.yaw   = atan2(T.U(:,2),T.U(:,1));
-T.yaw   = T.yaw + yaw;
+T.yaw   = yaw + T.yaw;
 
 T.Ct = min(T.Ct,ones(size(T.Ct))*0.89);
 %% Calculate Power Output

@@ -2,8 +2,8 @@
 if exist([file2val 'nacelleYaw.csv'], 'file') == 2
     % Get yaw angle (deg)
     Control.yawSOWFA = importYawAngleFile([file2val 'nacelleYaw.csv']);
-    Control.yawSOWFA(:,2) = yawSOWFA(:,2)-yawSOWFA(1,2);
-    
+    Control.yawSOWFA(:,2) = Control.yawSOWFA(:,2)-Control.yawSOWFA(1,2);
+    Control.yawSOWFA(:,2) = Control.yawSOWFA(:,2);
 else
     error('nacelleYaw.csv file not avaiable, change link and retry')
 end

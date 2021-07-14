@@ -49,7 +49,7 @@ Control.init = true;
 %
 % Needed for plotting:
 %   'generatorPower.csv'
-file2val = '/ValidationData/csv/2T_00_torque_';
+file2val = '/ValidationData/csv/9T_paper_ADM_';
 LoadSOWFAData;
 
 %% Load Layout
@@ -67,7 +67,7 @@ LoadSOWFAData;
 %  
 %   Chain length & the number of chains can be set as extra vars, see 
 %   comments in the function for additional info.
-[T,fieldLims,Pow,VCpCt,chain] = loadLayout('twoDTU10MW');
+[T,fieldLims,Pow,VCpCt,chain] = loadLayout('nineDTU10MW');
 
 %% Load the environment
 %   U provides info about the wind: Speed(s), direction(s), changes.
@@ -81,21 +81,21 @@ LoadSOWFAData;
 %       'const'                     -> Constant wind speed, direction and 
 %                                       amb. turbulence
 %       '+60DegChange'              -> 60 degree wind angle change after
-%                                       300s (all places at the same time)  
+%                                       600s (all places at the same time)  
 %       'Propagating40DegChange'    -> Propagating 40 degree wind angle
 %                                       change starting after 300s
 %
 %   Numerous settings can be set via additional arguments, see the comments
 %   for more info.
-[U, I, UF, Sim] = loadWindField('const',... 
-    'windAngle',0,...
-    'SimDuration',1000,...
+[U, I, UF, Sim] = loadWindField('+60DegChange',... 
+    'windAngle',15,...
+    'SimDuration',Control.yawSOWFA(end,2),...
     'FreeSpeed',true,...
     'Interaction',true,...
     'posMeasFactor',2000,...
-    'alpha_z',0.1,...
-    'windSpeed',8,...
-    'ambTurbulence',0.06);
+    'alpha_z',0.08,...
+    'windSpeed',8.2,...
+    'ambTurbulence',0.062);
 
 %% Visulization
 % Set to true or false
@@ -130,38 +130,78 @@ Vis.Console     = true;
 
 %% Compare power plot
 if Vis.PowerOutput
+    % Get SOWFA data if avaiable
+    powSOWFA_WPS = importGenPowerFile([file2val 'generatorPower.csv']);
+    
     % Plotting
     f = figure;
     hold on
     nT = length(T.D);
-    % Get SOWFA data if avaiable
-    if exist([file2val 'nacelleYaw.csv'], 'file') == 2
-        powSOWFA_WPS = importGenPowerFile([file2val 'generatorPower.csv']);
-        labels = cell(2*nT,1);
-        % =========== SOWFA data ===========
-        for iT = 1:nT
-            plot(...
-                powSOWFA_WPS(iT:nT:end,2)-powSOWFA_WPS(iT,2),...
-                powSOWFA_WPS(iT:nT:end,3)/UF.airDen,...
-                '-.','LineWidth',1)
-            labels{iT} = ['T' num2str(iT-1) ' SOWFA wps'];
-        end
-    else
-        labels = cell(nT,1);
-    end
+    % Design lowpass filter for SOWFA
+    deltaT_SOWFA = (powSOWFA_WPS(nT+1,2)-powSOWFA_WPS(1,2));
+    omega = 0.03;
+    lp_con = tf([omega^2],[1 2*omega*.7 omega^2]);
+    lp_dis_S = c2d(lp_con,deltaT_SOWFA);
+    lp_dis_F = c2d(lp_con,Sim.TimeStep);
+    % Cut off initial 30s in SOWFA for filter
+    iOff = round(30/deltaT_SOWFA)*nT;
     
+    labels = cell(2*nT,1);
+    % =========== SOWFA data ===========
+    for iT = 1:nT
+        % ==== filter function ====
+        %             % Create initial conditions for the filter
+        %             inOut = ones(2,1).*powSOWFA_WPS(iOff+iT,3)/UF.airDen;
+        %             initCond = filtic(lp_dis_S.Numerator{1},lp_dis_S.Denominator{1},inOut,inOut);
+        %             % Apply the lowpass filter with initial conditions
+        %             powSOWFA_Filt = filter(lp_dis_S.Numerator{1},lp_dis_S.Denominator{1},...
+        %                 powSOWFA_WPS(iOff+iT:nT:end,3)/UF.airDen,initCond);
+        
+        % ==== filtfilt function ====
+        % Apply filtfilt
+%         powSOWFA_Filt = filtfilt(lp_dis_S.Numerator{1},lp_dis_S.Denominator{1},...
+%             powSOWFA_WPS(iOff+iT:nT:end,3)/UF.airDen);
+%         %
+%         %             % Plot filtered data
+%         plot(...
+%             powSOWFA_WPS(iOff+iT:nT:end,2)-powSOWFA_WPS(iT,2),...
+%             powSOWFA_Filt/10^6,...
+%             '-.','LineWidth',2)
+%         
+%         labels{iT} = ['T' num2str(iT-1) ' SOWFA, f.'];
+        
+        % Plot raw data
+        plot(powSOWFA_WPS(iOff+iT:nT:end,2)-powSOWFA_WPS(iT,2),...
+            powSOWFA_WPS(iOff+iT:nT:end,3)/(10^6*UF.airDen),...
+            '-.','LineWidth',2)
+        labels{iT} = ['T' num2str(iT-1) ' SOWFA, unf.'];%
+    end
     % ========== FLORIDyn data =========
     for iT = 1:length(T.D)
-        plot(powerHist(:,1),powerHist(:,iT+1),'LineWidth',1.5)
-        labels{end-nT+iT} = ['T' num2str(iT-1) ' FLORIDyn'];
+        % ==== filter function ====
+        % Create initial conditions for the filter
+        inOut = ones(2,1).*powerHist(2,iT+1);
+        initCond = filtic(lp_dis_F.Numerator{1},lp_dis_F.Denominator{1},inOut,inOut);
+        % Apply the lowpass filter with initial conditions
+        powFLORIDynFilt = filter(lp_dis_F.Numerator{1},lp_dis_F.Denominator{1},...
+            powerHist(:,iT+1),initCond);
+        
+        % Plot filtered data
+%         plot(powerHist(:,1),powFLORIDynFilt/10^6,'LineWidth',2)
+%         labels{end-nT+iT} = ['T' num2str(iT-1) ' FLORIDyn, f.'];
+        
+        % Plot unfiltered data
+        plot(powerHist(:,1),powerHist(:,iT+1)/10^6,'LineWidth',2)
+        labels{end-nT+iT} = ['T' num2str(iT-1) ' FLORIDyn, unf.'];
     end
     
     hold off
     grid on
     xlim([0 powerHist(end,1)])
+    ylim([0.5 5])
     xlabel('Time [s]')
-    ylabel('Power generated [W]')
-    title([num2str(nT) ' turbine case, based on SOWFA data'])
+    ylabel('Power generated [MW]')
+    %title([num2str(nT) ' turbine case filtered, \omega=' num2str(omega)])
     legend(labels)
     % ==== Prep for export ==== %
     % scaling
@@ -170,6 +210,65 @@ if Vis.PowerOutput
     set(gca,'LooseInset', max(get(gca,'TightInset'), 0.04))
     f.PaperPositionMode   = 'auto';
 end
+
+%% 9 T plot
+if nT == 9
+    f = figure;
+    % Filtered SOWFA data
+    powSOWFA_Filt1 = filtfilt(lp_dis_S.Numerator{1},lp_dis_S.Denominator{1},...
+            powSOWFA_WPS(iOff+1:nT:end,3)/UF.airDen);
+    % Filtered FLORIDyn data
+    powFLORIDynFilt1 = filtfilt(lp_dis_F.Numerator{1},lp_dis_F.Denominator{1},...
+            powerHist(:,1+1));
+    for iT = 1:nT
+        subplot(3,3,iT);
+        powSOWFA_Filt = filtfilt(lp_dis_S.Numerator{1},lp_dis_S.Denominator{1},...
+            powSOWFA_WPS(iOff+iT:nT:end,3)/UF.airDen);
+        plot(...
+            powSOWFA_WPS(iOff+iT:nT:end,2)-powSOWFA_WPS(iT,2),...
+            powSOWFA_Filt,...%./powSOWFA_Filt1,...
+            '-.','LineWidth',1,'Color','#0072BD')
+        hold on
+        
+        
+        plot(powSOWFA_WPS(iT:nT:end,2)-powSOWFA_WPS(iT,2),...
+            powSOWFA_WPS(iT:nT:end,3)/UF.airDen,...
+            '-.','LineWidth',2,'Color','#0072BD')
+
+        % ==== filter function ====
+        %  Create initial conditions for the filter
+        inOut = ones(2,1).*powerHist(2,iT+1);
+        initCond = filtic(lp_dis_F.Numerator{1},lp_dis_F.Denominator{1},inOut,inOut);
+        % Apply the lowpass filter with initial conditions
+        powFLORIDynFilt = filter(lp_dis_F.Numerator{1},lp_dis_F.Denominator{1},...
+            powerHist(:,iT+1),initCond);
+        
+        % Plot filtered data
+        plot(powerHist(:,1),powFLORIDynFilt,'LineWidth',1,'Color','#D95319')
+        % Plot unfiltered data
+        plot(powerHist(:,1),powerHist(:,iT+1),'LineWidth',2,'Color','#D95319')
+        plot([600 600],[0 7*10^6],'k','LineWidth',2)
+        plot([900 900],[0 7*10^6],'k','LineWidth',2)
+        hold off
+        grid on
+        xlim([300 powerHist(end,1)])
+        ylim([1.5*10^6, 6*10^6])
+        %ylim([0.4,1.2])
+        xlabel('Time [s]')
+        ylabel('Power generated [W]')
+        title(['Turbine ' num2str(iT-1)])
+        if iT == 3
+            legend('SOWFA f.','SOWFA unf.','FLORIDyn f.', 'FLORIDyn unf.')
+        end
+    end
+    f.Units               = 'centimeters';
+    f.Position(3)         = 16.1; % A4 line width
+    set(gca,'LooseInset', max(get(gca,'TightInset'), 0.04))
+    f.PaperPositionMode   = 'auto';
+    % print('3T_filtered_00', '-dpng', '-r300')
+    %exportgraphics(gcf,'9T_HorFlow_t300.pdf','ContentType','vector')
+end
+
 %% ===================================================================== %%
 % = Reviewed: 2020.12.23 (yyyy.mm.dd)                                   = %
 % === Author: Marcus Becker                                             = %

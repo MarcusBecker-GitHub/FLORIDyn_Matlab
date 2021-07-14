@@ -155,7 +155,7 @@ switch fieldScenario
         I.val = ones(1,measPoints)*ambTurbulence;
         
     case '+60DegChange'
-        % +60 Deg Change after 300s over the next 300s.
+        % +60 Deg Change after 600s over the next 300s.
         % Two DTU 10MW Turbines 
         
         % Constant wind speed: [1 x m] vector
@@ -163,18 +163,21 @@ switch fieldScenario
         
         % Changing angle: [t x m] matrix
         U.ang = ones(NoTimeSteps,measPoints).*windAngle/180*pi;
-        startI = round(300/TimeStep);
-        changeAng = linspace(0,60/180*pi,startI);
+        I_start = round(600/TimeStep);
+        I_dur = round(300/TimeStep);
+        changeAng = linspace(0,60/180*pi,I_dur);
         
         % Throw error if the simulation time is set too short
-        if 2*startI>NoTimeSteps
+        if I_start+I_dur>NoTimeSteps
             error(['simulation is too short, set SimDuration'...
-                ' at least to ' num2str(2*startI*TimeStep) 's.'] ...
+                ' at least to ' num2str((I_start+I_dur)*TimeStep) 's.'] ...
                 )
         end
         
-        U.ang(startI+1:2*startI,:) = U.ang(startI+1:2*startI,:) + changeAng';
-        U.ang(2*startI+1:end,:) = U.ang(2*startI+1:end,:) + changeAng(end);
+        U.ang(I_start+1:I_start+I_dur,:) = ...
+            U.ang(I_start+1:I_start+I_dur,:) + changeAng';
+        U.ang(I_start+I_dur+1:end,:) = ...
+            U.ang(I_start+I_dur+1:end,:) + changeAng(end);
         U.ang = mod(U.ang,2*pi);
         
         % Constant ambient turbulence
@@ -187,40 +190,40 @@ switch fieldScenario
         
         % Changing angle: [t x m] matrix
         U.ang = ones(NoTimeSteps,measPoints).*windAngle/180*pi;
-        startI = round(300/TimeStep);
-        changeAng = linspace(0,40/180*pi,startI);
+        I_start = round(300/TimeStep);
+        changeAng = linspace(0,40/180*pi,I_start);
         
         % Offset with which the angle changes at the measurement points
         offset = round(60/TimeStep);
         
         % Throw error if the simulation time is set too short
-        if 2*startI+3*offset>NoTimeSteps
+        if 2*I_start+3*offset>NoTimeSteps
             error(['simulation is too short, set SimDuration'...
-                ' at least to ' num2str(2*startI*TimeStep) 's.'] ...
+                ' at least to ' num2str(2*I_start*TimeStep) 's.'] ...
                 )
         end
         
         % Apply change to all four measurement points, starting lower-left
         % corner, upper-left, lower-right to top-right. Offset is constant
         % between the m.-points
-        U.ang(startI+1:2*startI,1) = ...
-            U.ang(startI+1:2*startI,1) + changeAng';
+        U.ang(I_start+1:2*I_start,1) = ...
+            U.ang(I_start+1:2*I_start,1) + changeAng';
         
-        U.ang(startI+offset+1:2*startI+offset,3) = ...
-            U.ang(startI+offset+1:2*startI+offset,3) + changeAng';
+        U.ang(I_start+offset+1:2*I_start+offset,3) = ...
+            U.ang(I_start+offset+1:2*I_start+offset,3) + changeAng';
         
-        U.ang(startI+2*offset+1:2*startI+2*offset,2) = ...
-            U.ang(startI+2*offset+1:2*startI+2*offset,2) + changeAng';
+        U.ang(I_start+2*offset+1:2*I_start+2*offset,2) = ...
+            U.ang(I_start+2*offset+1:2*I_start+2*offset,2) + changeAng';
         
-        U.ang(startI+3*offset+1:2*startI+3*offset,4) = ...
-            U.ang(startI+3*offset+1:2*startI+3*offset,4) + changeAng';
+        U.ang(I_start+3*offset+1:2*I_start+3*offset,4) = ...
+            U.ang(I_start+3*offset+1:2*I_start+3*offset,4) + changeAng';
         
         % Set the remaining entries to the last value
-        U.ang(2*startI+1:end,1) = ...
-            U.ang(2*startI+1:end,1) + changeAng(end);
+        U.ang(2*I_start+1:end,1) = ...
+            U.ang(2*I_start+1:end,1) + changeAng(end);
         
-        U.ang(2*startI+offset+1:end,3) = ...
-            U.ang(2*startI+offset+1:end,3) + changeAng(end);
+        U.ang(2*I_start+offset+1:end,3) = ...
+            U.ang(2*I_start+offset+1:end,3) + changeAng(end);
         
 %         U.ang(2*startI+2*offset+1:end,2) = ...
 %             U.ang(2*startI+2*offset+1:end,2) + changeAng(end);

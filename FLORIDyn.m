@@ -166,6 +166,10 @@ for k = 1:Sim.NoTimeSteps
     
     OP.I_0 = getAmbientTurbulence(OP.pos, UF.IR, I_val, UF.Res, UF.lims);
     
+%     if mod(Sim.TimeSteps(k),100)==0
+%         if Sim.TimeSteps(k)==100; OnlineVis_Start; end
+%         OP_pos_old = OP.pos;
+%     end
     % Save old position for plotting if needed
     if or(Vis.online,and(Vis.FlowField,k == Sim.NoTimeSteps))
         OP_pos_old = OP.pos; %#ok<NASGU>
@@ -185,11 +189,18 @@ for k = 1:Sim.NoTimeSteps
     chain.List = shiftChainList(chain.List);
     
     %===================== ONLINE VISULIZATION ===========================%
+    
     if Vis.online; OnlineVis_plot; end
     if and(Vis.FlowField,k == Sim.NoTimeSteps)
         if Vis.online; hold off; end
         PostSimVis;
     end
+    
+%     if mod(Sim.TimeSteps(k),100)==0
+%         PostSimVis;
+%         colormap(viridis(1000));
+%         pause(0.01);
+%     end
     
     % Display the current simulation progress
     if Vis.Console;ProgressScript;end
