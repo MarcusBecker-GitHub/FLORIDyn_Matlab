@@ -49,7 +49,7 @@ Control.init = true;
 %
 % Needed for plotting:
 %   'generatorPower.csv'
-file2val = '/ValidationData/csv/9T_paper_ADM_';
+file2val = '/ValidationData/csv/2T_20_';
 LoadSOWFAData;
 
 %% Load Layout
@@ -125,8 +125,10 @@ Vis.Console     = true;
 [OP, chain] = assembleOPList(chain,T,'sunflower');
 
 %% Running FLORIDyn
+tStart = tic; 
 [powerHist,OP,T,chain]=...
     FLORIDyn(T,OP,U,I,UF,Sim,fieldLims,Pow,VCpCt,chain,Vis,Control);
+timeTest = toc(tStart);
 
 %% Compare power plot
 if Vis.PowerOutput

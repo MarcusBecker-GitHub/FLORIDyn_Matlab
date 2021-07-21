@@ -10,21 +10,21 @@ function [V, omega_hat] = WindSpeedEstimatorIandI(omega_g,pitch,Pg, Parameters, 
 % Modified by Marcus Becker in 14/07/2021.
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 %% Inputs
-% omega_g       : Measured rotor speed
+% omega_g       : Generator speed
 % omega (*)     : Estimated rotor speed
 % Ee    (*)     : Integrated error between est. rot. speed and measured
 % pitch         : Current blade pitch
 % Pg            : Power generator
 % Parameters    : Parameters used by the I&I estimator
-%           .Effic  : Efficiency                                        (?)
-%           .G      : gear ratio                                        (?)
-%           .J      : Effective inertia of rotor and generator
+%           .Effic  : Efficiency of the WT (power)
+%           .G      : Gear box ratio
+%           .J      : Equivalent inertia
 %           .rho    : Air density
 %           .R      : Turbine rotor radius
 %           .Tables         : Turbine specific look up tables 
 %           	   .Cp      : Power Coefficient (TSR & Blade pitch)
-%                  .TSR     : Resolution of the tip speed ratio         (?)
-%                  .Pitch   : Resolution of the blade pitch             (?)
+%                  .TSR     : Resolution of the tip speed ratio
+%                  .Pitch   : Resolution of the blade pitch
 % VI            : Wind speed input (previous estimate)
 % gamma         : Proportional gain (>0)
 % Beta          : Integral gain
