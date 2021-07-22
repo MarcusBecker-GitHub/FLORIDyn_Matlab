@@ -154,7 +154,7 @@ switch layout
         
         fieldLims = [0 0; 3000 3000];
         
-        Pow.eta     = 0.9365;%8;     %Def. DTU 10MW
+        Pow.eta     = 0.8572;%0.9365;%8;     %Def. DTU 10MW
         Pow.p_p     = 1.50;     %Def. DTU 10MW
         
         % Get VCtCp

@@ -49,7 +49,7 @@ Control.init = true;
 %
 % Needed for plotting:
 %   'generatorPower.csv'
-file2val = '/ValidationData/csv/2T_20_';
+file2val = '/ValidationData/csv/9T_paper_ADM_';
 LoadSOWFAData;
 
 %% Load Layout

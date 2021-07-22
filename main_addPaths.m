@@ -9,6 +9,7 @@ addpath('./Misc')
 addpath('./ValidationData')
 addpath('./ValidationData/csv')
 addpath('./SOWFATools')
+addpath('./WindSpeedEstimator')
 
 warning('off','MATLAB:scatteredInterpolant:DupPtsAvValuesWarnId')
 warning('off','MATLAB:scatteredInterpolant:InterpEmptyTri2DWarnId')
