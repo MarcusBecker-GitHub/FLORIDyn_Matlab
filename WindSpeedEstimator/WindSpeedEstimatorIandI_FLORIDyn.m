@@ -39,6 +39,7 @@ p_p = 2.2;
 tipSpeedRatio   = (Rotor_Speed * pi * rotorRadius)./(WSE.V * 30); 
 %   Power coefficient [-]
 Cp = max(WSE.T_prop.CpFun(tipSpeedRatio,Blade_pitch),0); 
+%   Correct for yaw angle
 Cp = Cp.*cos(yaw).^p_p;
 %% Estimate wind speed
 if isnan(Cp)
@@ -56,7 +57,7 @@ else
     omegadot    = -(GBEfficiency * Gen_Torque * gbRatio - ...
                         aerodynamicTorque)/(inertTot);
     WSE.omega   = WSE.omega + dt*omegadot;
-    diff_omega  = -WSE.omega + Rotor_Speed * pi/30;
+    diff_omega  = - WSE.omega + Rotor_Speed * pi/30;
     WSE.Ee      = WSE.Ee + diff_omega * dt;
     WSE.V       = beta * WSE.Ee + gamma * diff_omega;
 end
