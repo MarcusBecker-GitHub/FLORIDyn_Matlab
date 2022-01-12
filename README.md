@@ -3,6 +3,11 @@
 In this work the FLORIDyn model has been implemented. The model allows to dynamically simulate FLORIS wakes under heterogeneous conditions. Such conditions are changing wind speeds, directions and ambient turbulence intensity over time and space. The model also includes wake interaction effects and an added turbulence model. The code includes various layouts and conditions as well as guiding comments to create custom simulation cases.
 The high-fidelity simulation SOWFA was used to validate the code. In the current version it is possible to compare generated power outputs, to copy yaw behaviour of the SOWFA simulation and to copy control behaviour (greedy control or based on the tip-speed-ratio and the blade-pitch-angle). Relevant instructions are given in the code.
 
+## Paper and citation
+The paper about this model is currently in discussion in Wind Energy Science and can be accessed here: https://wes.copernicus.org/preprints/wes-2021-154/
+If the Gaussian FLORIDyn model is playing or played a role in your research, consider citing the work:
+Becker, M., Ritter, B., Doekemeijer, B., van der Hoek, D., Konigorski, U., Allaerts, D., and van Wingerden, J.-W.: The revised FLORIDyn model: Implementation of heterogeneous flow and the Gaussian wake, Wind Energ. Sci. Discuss. [preprint], https://doi.org/10.5194/wes-2021-154, in review, 2022. 
+
 ## How to get started
 There are two ways you can run the code: either from the FLORIDyn App or by running one of the main scripts. To use the app open FLORIDyn_App.mlapp. If you open it from the explorer only the App window should open. Use the "Preview" button to see where the turbines are, what the wind direction is and what the wind shear profile is. Upon clicking "run" the simulation will be carried out and will plot the generated power and also the flow field (if activated). 
 If you open FLORIDyn_App.mlapp from MATLAB you have access to the app code and can modify it.
@@ -46,11 +51,5 @@ It is also the goal to implement the model in Julia for performance reasons and 
 
 [3] Farrell, Alayna, Jennifer King, Caroline Draxl, Rafael Mudafort, Nicholas Hamilton, Christopher J Bay, Paul Fleming, and Eric Simley. “Design and Analysis of a Spatially Heterogeneous Wake.” Wind Energy Science, 2020, 25. https://doi.org/10.5194/wes-2020-57.
 
-
-
-## Context and contact
-This implementation was part of the master thesis of Marcus Becker, TU Darmstadt & TU Delft, Dez.2020
-The thesis is available upon request. The findings of this work will be published in the near future.
-
-Contact:
+## Contact:
 Marcus Becker, marcus.becker@tudelft.nl
