@@ -1,8 +1,26 @@
+%% ======= Script to read and store SOWFA simulation settings =========== %
+% This script reads and stores the data provided by the SOWFA simulations.
+% Data considered:
+%   nacelleYaw
+%       Yaw misalignment of the turbines
+%           It is assumed that T0 is aligned with the wind at t=0. SOWFA
+%           stores the nacelle yaw as an orientation, while this code only
+%           considers misalignment. Therefore we deduct the initial
+%           orientation of T0 from all turbine orientation data to arrive
+%           at the yaw misalignment.
+%   bladePitch & rotorSpeedFiltered
+%       FLORIDyn has access to the Ct/Cp tables of the DTU10MW based on the
+%       blade pitch and the tip-speed ratio. Using these two files, the
+%       code will use the Ct/Cp tables. NOTE these tables are only usable
+%       for the DTU 10MW reference turbine - another turbine type has
+%       different tables and a comparison will lead to unexpected
+%       behaviour.
+% ======================================================================= %
 %% Check for SOWFA files and load
 if exist([file2val 'nacelleYaw.csv'], 'file') == 2
     % Get yaw angle (deg)
     Control.yawSOWFA = importYawAngleFile([file2val 'nacelleYaw.csv']);
-    Control.yawSOWFA(:,2) = yawSOWFA(:,2)-yawSOWFA(1,2);
+    Control.yawSOWFA(:,2) = Control.yawSOWFA(:,2)-Control.yawSOWFA(1,2);
     
 else
     error('nacelleYaw.csv file not avaiable, change link and retry')
@@ -35,3 +53,9 @@ if exist([file2val 'bladePitch.csv'], 'file') == 2
         sowfaData.tsrArray,...
         sowfaData.ctArray,'linear','nearest');
 end
+
+%% ===================================================================== %%
+% = Reviewed: 2023.10.09 (yyyy.mm.dd)                                   = %
+% === Author: Marcus Becker                                             = %
+% == Contact: marcus.becker@tudelft.nl                                  = %
+% ======================================================================= %
