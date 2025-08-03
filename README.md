@@ -1,20 +1,38 @@
-# FLORIDyn
 
-In this work the FLORIDyn model has been implemented. The model allows to dynamically simulate FLORIS wakes under heterogeneous conditions. Such conditions are changing wind speeds, directions and ambient turbulence intensity over time and space. The model also includes wake interaction effects and an added turbulence model. The code includes various layouts and conditions as well as guiding comments to create custom simulation cases.
-The high-fidelity simulation SOWFA was used to validate the code. In the current version it is possible to compare generated power outputs, to copy yaw behaviour of the SOWFA simulation and to copy control behaviour (greedy control or based on the tip-speed-ratio and the blade-pitch-angle). Relevant instructions are given in the code.
+# FLORIDyn versions
+There are *multiple* versions of FLORIDyn described in the literature. The table below lists those developed in collaboration with / at TU Delft. The table further gives an indication of what is implemented, which papers describe the model, and what can be expected in terms of computational speed.
+
+**The version in this repository is not under further development!**
+We recommend the use of another FLORIDyn implementation.
+Basic bug fixes and help will still be provided.
+
+## Overview
+| Name | Repository | Model Paper | FLORIDyn | Wake model | EnKF | Optimization | Active development | Authors | Comp. speed | Language |
+|---|---|---|---|---|---|---|---|---|---|---|
+| FLORIDyn 3.0 | [Repo](https://github.com/TUDelft-DataDrivenControl/FLORIDyn_Matlab) | [Link](https://iopscience.iop.org/article/10.1088/1742-6596/2265/3/032103) | 3D, centerline | Gaussian | ✅ | ✅ | ✅ | M.Becker | + | Matlab |
+| FLORIDyn 2.0 | [This repo](https://github.com/MarcusBecker-GitHub/FLORIDyn_Matlab) | [Link](https://wes.copernicus.org/articles/7/2163/2022/wes-7-2163-2022.html) | 3D, multichain | Gaussian | ❌ | ❌ | ❌ | M.Becker | - | Matlab |
+| FLORIDyn 1.0 | ❌ | [Link](https://iopscience.iop.org/article/10.1088/1742-6596/524/1/012186) | 2D, multichain | Zone FLORIS | ❌ | ❌ | ❌ | P.M.O. Gebraad | ❌ | ❌ |
+| OFF | [Link](https://github.com/TUDelft-DataDrivenControl/OFF) | [Link](https://wes.copernicus.org/articles/10/1055/2025/) | 3D, centerline | [FLORIS](https://github.com/NREL/floris) | ❌ | ❌ | ❌ | M.Becker, M. Lejeune | 0 | Python |
+| FLORIDyn.jl | [Link](https://github.com/ufechner7/FLORIDyn.jl) | [Link](https://iopscience.iop.org/article/10.1088/1742-6596/2265/3/032103) | 3D, centerline | Gaussian | ❌ | in progress | ✅ | U.Fechner | ++ | Julia |
+
+# FLORIDyn 2.0
+
+The Flow redirection and induction dynamics model allows for the dynamic simulation of FLORIS wakes under heterogeneous conditions. Such conditions are changing wind speeds, directions, and ambient turbulence intensity over time and space. The model also includes wake interaction effects and an added turbulence model. The code includes various layouts and conditions as well as guiding comments to create custom simulation cases.
+The high-fidelity simulation SOWFA was used to validate the code. In the current version, it is possible to compare generated power outputs, to copy yaw behaviour of the SOWFA simulation, and to copy control behaviour (greedy control or based on the tip-speed-ratio and the blade-pitch-angle). Relevant instructions are given in the code.
 
 ## Paper and citation
 The paper about this model is currently in discussion in Wind Energy Science and can be accessed here: https://wes.copernicus.org/preprints/wes-2021-154/
 If the Gaussian FLORIDyn model is playing or played a role in your research, consider citing the work:
-Becker, M., Ritter, B., Doekemeijer, B., van der Hoek, D., Konigorski, U., Allaerts, D., and van Wingerden, J.-W.: The revised FLORIDyn model: Implementation of heterogeneous flow and the Gaussian wake, Wind Energ. Sci. Discuss. [preprint], https://doi.org/10.5194/wes-2021-154, in review, 2022. 
+
+> Becker, M., Ritter, B., Doekemeijer, B., van der Hoek, D., Konigorski, U., Allaerts, D., and van Wingerden, J.-W.: The revised FLORIDyn model: Implementation of heterogeneous flow and the Gaussian wake, Wind Energ. Sci. Discuss. [preprint], https://doi.org/10.5194/wes-2021-154, in review, 2022. 
 
 ## How to get started
-There are two ways you can run the code: either from the FLORIDyn App or by running one of the main scripts. To use the app open FLORIDyn_App.mlapp. If you open it from the explorer only the App window should open. Use the "Preview" button to see where the turbines are, what the wind direction is and what the wind shear profile is. Upon clicking "run" the simulation will be carried out and will plot the generated power and also the flow field (if activated). 
-If you open FLORIDyn_App.mlapp from MATLAB you have access to the app code and can modify it.
-For more choice use the script main.m which contains a framework to run a FLORIDyn - standalone simulation. It prepares the necessary variables and settings and calls the function FLORIDyn.m . If you have SOWFA data avaiable or want to run a simulation based on SOWFA data in this repository, use mainSOWFA.m . The script mentions the necessary files and includes the generated power in SOWFA in the power plot. Currently the FLORIDyn simulation is coupled very lightly with SOWFA, more is planned for the future.
+There are two ways you can run the code: either from the FLORIDyn App or by running one of the main scripts. To use the app, open FLORIDyn_App.mlapp. If you open it from the explorer, only the App window should open. Use the "Preview" button to see where the turbines are, what the wind direction is, and what the wind shear profile is. Upon clicking "run" the simulation will be carried out and will plot the generated power and also the flow field (if activated). 
+If you open FLORIDyn_App.mlapp from MATLAB, you have access to the app code and can modify it.
+For more choice, use the script main.m, which contains a framework to run a FLORIDyn - standalone simulation. It prepares the necessary variables and settings and calls the function FLORIDyn.m . If you have SOWFA data available or want to run a simulation based on SOWFA data in this repository, use mainSOWFA.m . The script mentions the necessary files and includes the generated power in SOWFA in the power plot.
 
 ## Scientific basis
-The underlying FLORIS model is based on the gaussian wake model by Bastankhah and Porte-Agel [1], the dynamic transformation is inspired by the FLORIDyn model by Gebraad and Wingerden [2]. Concepts to include heterogeneous conditions for the FLORIS model have been inspired by Farrell et al. [3].
+The underlying FLORIS model is based on the Gaussian wake model by Bastankhah and Porte-Agel [1], and the dynamic transformation is inspired by the FLORIDyn model by Gebraad and Wingerden [2]. Concepts to include heterogeneous conditions for the FLORIS model have been inspired by Farrell et al. [3].
 
 ## Pictures and animations
 Selection of visualizations, more can be found in the folder "Pictures".
